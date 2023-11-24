@@ -1,0 +1,1 @@
+https://raw.githubusercontent.com/Alexanna/ComputerCraftPrograms/main/BasePrograms/miningScript.lua
