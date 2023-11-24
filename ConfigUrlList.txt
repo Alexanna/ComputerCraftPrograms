@@ -1,1 +1,1 @@
-https://raw.githubusercontent.com/Alexanna/ComputerCraftPrograms/main/CommonConfigs/excludedConfig.cfg
+CommonConfigs/excludedConfig.cfg

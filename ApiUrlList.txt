@@ -1,5 +1,5 @@
-https://raw.githubusercontent.com/Alexanna/ComputerCraftPrograms/main/Apis/displayAPI.lua
-https://raw.githubusercontent.com/Alexanna/ComputerCraftPrograms/main/Apis/refuelAPI.lua
-https://raw.githubusercontent.com/Alexanna/ComputerCraftPrograms/main/Apis/configAPI.lua
-https://raw.githubusercontent.com/Alexanna/ComputerCraftPrograms/main/Apis/excludeItemsAPI.lua
-https://raw.githubusercontent.com/Alexanna/ComputerCraftPrograms/main/Apis/movementAPI.lua
+Apis/displayAPI.lua
+Apis/refuelAPI.lua
+Apis/configAPI.lua
+Apis/excludeItemsAPI.lua
+Apis/movementAPI.lua
