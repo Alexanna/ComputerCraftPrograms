@@ -3,6 +3,11 @@ local apiList = "ApiUrlList.txt"
 local programList = "ProgramUrlList.txt"
 local configList = "ConfigUrlList.txt"
 
+page = http.get("https://raw.githubusercontent.com/Alexanna/ComputerCraftPrograms/main/APIDownloader.lua")
+file = fs.open("APIDownloader.lua", "w")
+file.write(page.readAll())
+file.close()
+page.close()
 
 function GetUrlTable(url)
     return http.get(url)
@@ -16,6 +21,7 @@ function DownloadAllInList(url)
         local file = fs.open(line, "w")
         file.write(page.readAll())
         file.close()
+        page.close()
         line = listTable.readLine()
     end
 end

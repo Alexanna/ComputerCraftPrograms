@@ -2,90 +2,28 @@ local confFileName = "loggerConf"
 os.loadAPI("apis/configAPI.lua")
 os.loadAPI("apis/movementAPI.lua")
 os.loadAPI("apis/refuelAPI.lua")
+os.loadAPI("apis/gridMoveAPI.lua")
+os.loadAPI("apis/displayAPI.lua")
+local printName = "Logger"
 
-
-local treeStartPos = vector.new(0,0,0)
-local treeEndPos = vector.new(0,0,0)
-local treeDistanceX = 3
-local treeDistanceZ = 3
-local startForward = movementAPI.dirNorth
-
-local arrLength = 0
-local arrWidth = 0
-
-local treeVecArr = {}
+local treesCut = 0
 
 function GetConfArray()
-    return {startForward, "startForward: ", treeDistanceX, "treeDistanceX: ", treeDistanceZ, "treeDistanceZ: ", treeStartPos.x,"treeStartPos X: ",treeStartPos.y,"treeStartPos Y: ",treeStartPos.z,"treeStartPos Z: ", treeEndPos.x, "treeEndPos X: ", treeEndPos.y, "treeEndPos Y: ", treeEndPos.z,"treeEndPos Z: "}
+    return { treesCut, "treesCut: "}
 end
 
 function ApplyConfArray(args)
     local i = 1
-    startForward = args[i]
+    treesCut = args[i]
     i = i + 2
-    treeDistanceX = args[i]
-    i = i + 2
-    treeDistanceZ = args[i]
-    i = i + 2
-    treeStartPos.x = args[i]
-    i = i + 2
-    treeStartPos.y = args[i]
-    i = i + 2
-    treeStartPos.z = args[i]
-    i = i + 2
-    treeEndPos.x = args[i]
-    i = i + 2
-    treeEndPos.y = args[i]
-    i = i + 2
-    treeEndPos.z = args[i]
 end
 
 function WriteConfFile()
     configAPI.WriteConfFile(confFileName, GetConfArray())
 end
 
-function SetupTreeArray()
-    print("Setting up array", treeStartPos, treeEndPos)
-    
-    local dif = treeEndPos - treeStartPos
-    
-    print(dif,(1.0 / treeDistanceX),(1.0 / treeDistanceZ))
-    
-    local difNormalized = vector.new(dif.x  * (1.0 / treeDistanceX), 0, dif.z  * (1.0 / treeDistanceZ))
-    print(difNormalized)
-    
-    local dirLength = 0
-    if difNormalized.x > 0 then
-        dirLength = 1
-    else
-        dirLength = -1
-    end
-
-    local dirWidth = 0
-    if difNormalized.z > 0 then
-        dirWidth = 1
-    else
-        dirWidth = -1
-    end
-    
-    arrLength = math.floor(math.abs(difNormalized.x)) + 1
-    arrWidth = math.floor(math.abs(difNormalized.z)) + 1
-
-    print("Array: ",dif, difNormalized, dirLength, dirWidth, arrLength, arrWidth)
-    
-    for i = 1, arrLength do
-        treeVecArr[i] = {}
-        for j = 1, arrWidth do
-            treeVecArr[i][j] = treeStartPos + vector.new(treeDistanceX * (i - 1) * dirLength, 0, treeDistanceZ * (j - 1) * dirWidth)
-        end
-    end
-    
-    print("Done setting up array")
-end
-
 function ChopTree()
-    print("Chopping")
-    
+    displayAPI.Write(printName..".IsChopping", "Is Chopping: true")
     turtle.digDown()
 
     local height = 0
@@ -103,52 +41,35 @@ function ChopTree()
     turtle.suckDown()
     turtle.suckDown()
     turtle.suckDown()
+
+    treesCut = treesCut + 1;
+    WriteConfFile()
+    
+    displayAPI.Write(printName..".TreesCut", "Trees Cut: " .. treesCut)
+    displayAPI.Write(printName..".IsChopping", "Is Chopping: false")
 end
 
 function ChopTrees() 
-    
-    local startWidth = 1
-    local direction = 1
-    local endTarget = arrWidth
-    
-    for currentL = 1, arrLength do
-        for currentW = startWidth, endTarget, direction do
-            local treePos = treeVecArr[currentL][currentW]
-
-            print("Going to tree: ", treePos)
-
-            movementAPI.MoveToPos(treePos, true)
-
-            local foundBlock, details = turtle.inspectUp()
-            
-            if foundBlock and details.name == "minecraft:spruce_log" then
-                ChopTree()
-            end
-
-            foundBlock, details = turtle.inspectDown()
-            if foundBlock and  details.name ~= "minecraft:spruce_sapling" then
-                ChopTree()
-                foundBlock = false
-            end
-
-            if not foundBlock then
-                turtle.select(16)
-                if turtle.getItemCount() == 0 then
-                    turtle.select(15)
-                end
-                turtle.placeDown()
-                turtle.select(1)
-            end
-        end
+    while gridMoveAPI.MoveNext(true) do
+        local foundBlock, details = turtle.inspectUp()
         
-        if direction == 1 then
-            startWidth = arrWidth
-            direction = -1
-            endTarget = 1
-        else
-            startWidth = 1
-            direction = 1
-            endTarget = arrWidth
+        if foundBlock and details.name == "minecraft:spruce_log" then
+            ChopTree()
+        end
+      
+        foundBlock, details = turtle.inspectDown()
+        if foundBlock and  details.name ~= "minecraft:spruce_sapling" then
+            ChopTree()
+            foundBlock = false
+        end
+      
+        if not foundBlock then
+            turtle.select(16)
+            if turtle.getItemCount() == 0 then
+                turtle.select(15)
+            end
+            turtle.placeDown()
+            turtle.select(1)
         end
     end
 end
@@ -159,15 +80,14 @@ function Main()
     configAPI.SetupConfig(confFileName, confArr)
     ApplyConfArray(confArr)
 
-    SetupTreeArray()
+    movementAPI.GoHome(true)
     
     while true do
-        movementAPI.GoHome(true)
-        movementAPI.TurnDir(startForward)
-
         while rs.getInput("back") do
+            displayAPI.Write(printName..".IsWaiting", "Is Waiting: true")
             sleep(10)
         end
+        displayAPI.Write(printName..".IsWaiting", "Is Waiting: false")
         
         turtle.select(16)
         turtle.suckDown()
@@ -184,17 +104,11 @@ function Main()
             turtle.dropDown()
         end
 
-        print("Sleeping 0 seconds")
-        --sleep(0)
-
         movementAPI.MoveForward(1, true)
 
         ChopTrees()
         
-        movementAPI.MoveForward(1, true)
     end
 end
-
-
 
 Main()

@@ -1,7 +1,5 @@
-os.loadAPI("APIDownloader.lua")
+--os.loadAPI("APIDownloader.lua")
 
-APIDownloader.APIs()
-APIDownloader.Programs()
-APIDownloader.Configs()
+--APIDownloader.All()
 
-shell.run("myScripts/miningScript.lua")
+shell.run("BasePrograms/beeScript.lua")
