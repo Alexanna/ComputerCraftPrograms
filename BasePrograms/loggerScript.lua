@@ -1,9 +1,9 @@
 local confFileName = "loggerConf"
-os.loadAPI("apis/configAPI.lua")
-os.loadAPI("apis/movementAPI.lua")
-os.loadAPI("apis/refuelAPI.lua")
-os.loadAPI("apis/gridMoveAPI.lua")
-os.loadAPI("apis/displayAPI.lua")
+os.loadAPI("Apis/configAPI.lua")
+os.loadAPI("Apis/movementAPI.lua")
+os.loadAPI("Apis/refuelAPI.lua")
+os.loadAPI("Apis/gridMoveAPI.lua")
+os.loadAPI("Apis/displayAPI.lua")
 local printName = "Logger"
 
 local treesCut = 0

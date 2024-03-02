@@ -1,10 +1,10 @@
 local confFileName = "miningConfig"
 
-os.loadAPI("apis/configAPI.lua")
-os.loadAPI("apis/movementAPI.lua")
-os.loadAPI("apis/excludeItemsAPI.lua")
-os.loadAPI("apis/refuelAPI.lua")
-os.loadAPI("apis/displayAPI.lua")
+os.loadAPI("Apis/configAPI.lua")
+os.loadAPI("Apis/movementAPI.lua")
+os.loadAPI("Apis/excludeItemsAPI.lua")
+os.loadAPI("Apis/refuelAPI.lua")
+os.loadAPI("Apis/displayAPI.lua")
 local printName = "MiningScript"
 
 local minePos = vector.new(0,0,0)

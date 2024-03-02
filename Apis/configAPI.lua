@@ -1,7 +1,7 @@
-os.loadAPI("apis/displayAPI.lua")
+os.loadAPI("Apis/displayAPI.lua")
 local printName = "ConfigAPI"
 
-local confPath = "configs/"
+local confPath = "Configs/"
 local confExtension = ".cfg"
 
 function GetInputNumber(displayTest)

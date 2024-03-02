@@ -1,7 +1,7 @@
 local confFileName = "movementConf"
-os.loadAPI("apis/configAPI.lua")
-os.loadAPI("apis/refuelAPI.lua")
-os.loadAPI("apis/displayAPI.lua")
+os.loadAPI("Apis/configAPI.lua")
+os.loadAPI("Apis/refuelAPI.lua")
+os.loadAPI("Apis/displayAPI.lua")
 local printName = "MovementAPI"
 
 dirNorth = 1

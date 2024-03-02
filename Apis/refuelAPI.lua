@@ -1,4 +1,4 @@
-os.loadAPI("apis/displayAPI.lua")
+os.loadAPI("Apis/displayAPI.lua")
 local printName = "RefuelAPI"
 
 maxFuel = turtle.getFuelLimit()

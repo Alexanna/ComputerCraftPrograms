@@ -1,8 +1,8 @@
 --os.loadAPI("apis/excludeItemsAPI.lua")
 
 local excludedFileName = "excludedConfig"
-os.loadAPI("apis/configAPI.lua")
-os.loadAPI("apis/displayAPI.lua")
+os.loadAPI("Apis/configAPI.lua")
+os.loadAPI("Apis/displayAPI.lua")
 local printName = "ExcludedItems"
 
 excludedItems = {}
