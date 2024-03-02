@@ -7,14 +7,25 @@ os.loadAPI("apis/displayAPI.lua")
 local printName = "Logger"
 
 local treesCut = 0
+local dumpPos = vector.new(0,0,0)
+
+local treeType = ""
 
 function GetConfArray()
-    return { treesCut, "treesCut: "}
+    return { treesCut, "treesCut: ", treeType, "Tree Type [spruce][oak]: ", dumpPos.x, "dumpX: ", dumpPos.y, "dumpY: ", dumpPos.z, "dumpZ: "}
 end
 
 function ApplyConfArray(args)
     local i = 1
     treesCut = args[i]
+    i = i + 2
+    treeType = args[i]
+    i = i + 2
+    dumpPos.x = args[i]
+    i = i + 2
+    dumpPos.y = args[i]
+    i = i + 2
+    dumpPos.z = args[i]
     i = i + 2
 end
 
@@ -53,12 +64,12 @@ function ChopTrees()
     while gridMoveAPI.MoveNext(true) do
         local foundBlock, details = turtle.inspectUp()
         
-        if foundBlock and details.name == "minecraft:spruce_log" then
+        if foundBlock and details.name == "minecraft:"..treeType.."_log" then
             ChopTree()
         end
       
         foundBlock, details = turtle.inspectDown()
-        if foundBlock and  details.name ~= "minecraft:spruce_sapling" then
+        if foundBlock and  details.name ~= "minecraft:"..treeType.."_sapling" then
             ChopTree()
             foundBlock = false
         end
@@ -97,7 +108,7 @@ function Main()
         turtle.select(1)
         
         
-        movementAPI.MoveForward(1, true)
+        movementAPI.MoveToPos(dumpPos, true)
 
         for slot = 2, 14 do
             turtle.select(slot)

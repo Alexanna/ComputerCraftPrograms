@@ -13,6 +13,7 @@ currentDir = dirNorth
 currentPos = vector.new(0,0,0)
 homePos = vector.new(0,0,0)
 homeDirection = dirNorth
+sleepAfterFailedMove = 5
 
 
 
@@ -23,7 +24,7 @@ function Refuel()
 end
 
 function GetConfArray() 
-    return {currentDir, "Current Dir: ", currentPos.x,"Current Pos X: ",currentPos.y,"Current Pos Y: ",currentPos.z,"Current Pos Z: ", homePos.x, "Home Pos X: ", homePos.y, "Home Pos Y: ", homePos.z,"Home Pos Z: ", homeDirection, "Home Direction: "}
+    return {currentDir, "Current Dir: ", currentPos.x,"Current Pos X: ",currentPos.y,"Current Pos Y: ",currentPos.z,"Current Pos Z: ", homePos.x, "Home Pos X: ", homePos.y, "Home Pos Y: ", homePos.z,"Home Pos Z: ", homeDirection, "Home Direction: ", sleepAfterFailedMove, "Sleep After Failed Move: "}
 end
 
 function ApplyConfArray(args)
@@ -35,6 +36,7 @@ function ApplyConfArray(args)
     homePos.y = args[11]
     homePos.z = args[13]
     homeDirection = args[15]
+    sleepAfterFailedMove = args[17]
 end
 
 function WriteConfFile()
@@ -116,16 +118,16 @@ function MoveForward(distance, doDig)
             turtle.dig()
         end
         
-        local firstAttempt = false
+        local moveAttempts = 0
         while not turtle.forward() do
-            displayAPI.Print(printName,"Could not move forwards")
+            displayAPI.Print(printName,"Could not move forwards" .. moveAttempts)
             Refuel()
 
-            if not firstAttempt then
-                sleep(10)
+            if moveAttempts > 1 then
+                sleep(sleepAfterFailedMove)
             end
-            
-            firstAttempt = true
+
+            moveAttempts = moveAttempts + 1
             if dig then
                 turtle.dig()
             end
@@ -160,16 +162,16 @@ function MoveUp(distance, doDig)
             turtle.digUp()
         end
 
-        local firstAttempt = false
+        local moveAttempts = 0
         while not turtle.up() do
-            displayAPI.Print(printName,"Could not move up")
+            displayAPI.Print(printName,"Could not move up" .. moveAttempts)
             Refuel()
 
-            if not firstAttempt then
-                sleep(10)
+            if moveAttempts > 1 then
+                sleep(sleepAfterFailedMove)
             end
 
-            firstAttempt = true
+            moveAttempts = moveAttempts + 1
         end
         currentPos.y = currentPos.y + 1
         WriteConfFile()
@@ -181,23 +183,23 @@ end
 function MoveDown(distance, doDig)
     local dig = doDig or false
 
-    displayAPI.Print(printName,"Move Up:", distance)
+    displayAPI.Print(printName,"Move Down:", distance)
     for i = 1, distance do
 
         if dig then
             turtle.digDown()
         end
 
-        local firstAttempt = false
+        local moveAttempts = 0
         while not turtle.down() do
-            displayAPI.Print(printName,"Could not move down")
+            displayAPI.Print(printName,"Could not move down: " .. moveAttempts)
             Refuel()
 
-            if not firstAttempt then
-                sleep(10)
+            if moveAttempts > 1 then
+                sleep(sleepAfterFailedMove)
             end
 
-            firstAttempt = true
+            moveAttempts = moveAttempts + 1
         end
         currentPos.y = currentPos.y - 1
         WriteConfFile()
