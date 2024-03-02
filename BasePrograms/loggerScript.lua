@@ -8,11 +8,11 @@ local printName = "Logger"
 
 local treesCut = 0
 local dumpPos = vector.new(0,0,0)
-
-local treeType = ""
+local treeTypes = {"spruce", "oak"}
+local treeType = 1
 
 function GetConfArray()
-    return { treesCut, "treesCut: ", treeType, "Tree Type [spruce][oak]: ", dumpPos.x, "dumpX: ", dumpPos.y, "dumpY: ", dumpPos.z, "dumpZ: "}
+    return { treesCut, "treesCut: ", treeType, "Tree Type [spruce = 1][oak = 2]: ", dumpPos.x, "dumpX: ", dumpPos.y, "dumpY: ", dumpPos.z, "dumpZ: "}
 end
 
 function ApplyConfArray(args)
@@ -64,12 +64,12 @@ function ChopTrees()
     while gridMoveAPI.MoveNext(true) do
         local foundBlock, details = turtle.inspectUp()
         
-        if foundBlock and details.name == "minecraft:"..treeType.."_log" then
+        if foundBlock and details.name == "minecraft:"..(treeTypes[treeType]).."_log" then
             ChopTree()
         end
       
         foundBlock, details = turtle.inspectDown()
-        if foundBlock and  details.name ~= "minecraft:"..treeType.."_sapling" then
+        if foundBlock and  details.name ~= "minecraft:"..(treeTypes[treeType]).."_sapling" then
             ChopTree()
             foundBlock = false
         end
@@ -114,8 +114,6 @@ function Main()
             turtle.select(slot)
             turtle.dropDown()
         end
-
-        movementAPI.MoveForward(1, true)
 
         ChopTrees()
         
