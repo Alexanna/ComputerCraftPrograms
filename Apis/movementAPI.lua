@@ -14,7 +14,7 @@ currentPos = vector.new(0,0,0)
 homePos = vector.new(0,0,0)
 homeDirection = dirNorth
 sleepAfterFailedMove = 5
-
+isAtHome = 1
 
 
 local moveCount = 0
@@ -24,19 +24,31 @@ function Refuel()
 end
 
 function GetConfArray() 
-    return {currentDir, "Current Dir: ", currentPos.x,"Current Pos X: ",currentPos.y,"Current Pos Y: ",currentPos.z,"Current Pos Z: ", homePos.x, "Home Pos X: ", homePos.y, "Home Pos Y: ", homePos.z,"Home Pos Z: ", homeDirection, "Home Direction: ", sleepAfterFailedMove, "Sleep After Failed Move: "}
+    return {currentDir, "Current Dir: ", currentPos.x,"Current Pos X: ",currentPos.y,"Current Pos Y: ",currentPos.z,"Current Pos Z: ", homePos.x, "Home Pos X: ", homePos.y, "Home Pos Y: ", homePos.z,"Home Pos Z: ", homeDirection, "Home Direction: ", sleepAfterFailedMove, "Sleep After Failed Move: ", isAtHome, "Is At Home: "}
 end
 
 function ApplyConfArray(args)
-    currentDir = args[1]
-    currentPos.x = args[3]
-    currentPos.y = args[5]
-    currentPos.z = args[7]
+    isAtHome = args[19]
     homePos.x = args[9]
     homePos.y = args[11]
     homePos.z = args[13]
     homeDirection = args[15]
+
+    if isAtHome == 1 then
+        currentDir = homeDirection
+        currentPos.x = homePos.x
+        currentPos.y = homePos.y
+        currentPos.z = homePos.z
+    else
+        currentDir = args[1]
+        currentPos.x = args[3]
+        currentPos.y = args[5]
+        currentPos.z = args[7]
+    end
+    
     sleepAfterFailedMove = args[17]
+    
+    isAtHome = 0;
 end
 
 function WriteConfFile()
