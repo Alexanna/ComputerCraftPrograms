@@ -146,16 +146,16 @@ function MoveForward(distance, doDig)
         end
 
         if currentDir == dirNorth then
-            currentPos.z = currentPos.z + 1
-
-        elseif currentDir == dirEast then
-            currentPos.x = currentPos.x - 1
-
-        elseif currentDir == dirSouth then
             currentPos.z = currentPos.z - 1
 
-        elseif currentDir == dirWest then
+        elseif currentDir == dirEast then
             currentPos.x = currentPos.x + 1
+
+        elseif currentDir == dirSouth then
+            currentPos.z = currentPos.z + 1
+
+        elseif currentDir == dirWest then
+            currentPos.x = currentPos.x - 1
 
         end
         WriteConfFile()
@@ -236,7 +236,7 @@ function MoveToPos(targetPos, doDig)
     
     if diffVector.x ~= 0 then
 
-        if diffVector.x < 0 then
+        if diffVector.x > 0 then
             TurnDir(dirEast)
             MoveForward(math.abs(diffVector.x), dig)
         else
@@ -246,7 +246,7 @@ function MoveToPos(targetPos, doDig)
     end
 
     if diffVector.z ~= 0 then
-        if diffVector.z < 0  then
+        if diffVector.z > 0  then
             TurnDir(dirSouth)
             MoveForward(math.abs(diffVector.z), dig)
         else
