@@ -52,6 +52,9 @@ function ChopTree()
     turtle.suckDown()
     turtle.suckDown()
     turtle.suckDown()
+    turtle.suckUp()
+    turtle.suckUp()
+    turtle.suckUp()
 
     treesCut = treesCut + 1;
     WriteConfFile()
