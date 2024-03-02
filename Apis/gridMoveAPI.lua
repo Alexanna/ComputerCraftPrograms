@@ -106,7 +106,7 @@ function MoveNext(digMove)
         WriteConfFile()
         displayAPI.Write(printName .. ".Index", "HOME | X (" .. gridIndexLength .. "/" .. arrLength .. "), Z (".. gridIndexWidth .."/"..arrWidth..") Dir("..direction..")")
         movementAPI.MoveForward(2, digMove)
-        movementAPI.GoHome();
+        movementAPI.GoHome(digMove);
         return false
     end
 
