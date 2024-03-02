@@ -4,8 +4,10 @@ local programList = "ProgramUrlList.txt"
 local configList = "ConfigUrlList.txt"
 
 page = http.get("https://raw.githubusercontent.com/Alexanna/ComputerCraftPrograms/main/APIDownloader.lua")
+text = page.readAll();
 file = fs.open("APIDownloader.lua", "w")
-file.write(page.readAll())
+if string.byte(text) == 63 then text = string.sub(text, 2) end
+file.write(text)
 file.close()
 page.close()
 
@@ -18,8 +20,10 @@ function DownloadAllInList(url)
     local line = listTable.readLine()
     while line ~= nill and #line > 0 do
         local page = http.get(rootURL .. line)
+        text = page.readAll();
         local file = fs.open(line, "w")
-        file.write(page.readAll())
+        if string.byte(text) == 63 then text = string.sub(text, 2) end
+        file.write(text)
         file.close()
         page.close()
         line = listTable.readLine()
@@ -43,3 +47,5 @@ function All()
     Programs()
     Configs()
 end
+
+All()
