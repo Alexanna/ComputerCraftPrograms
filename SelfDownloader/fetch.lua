@@ -1,25 +1,43 @@
-﻿local rootURL = "https://raw.githubusercontent.com/Alexanna/ComputerCraftPrograms/main/"
+﻿local appName = ...
+
+local rootURL = "https://raw.githubusercontent.com/Alexanna/ComputerCraftPrograms/main/"
 local programList = "programs.json"
-local jsonPath = "extlibs/json.lua"
-local json
-local fetch
+local jsonPath = "extlib/json.lua"
+local json = {}
+local fetch = {}
 local hasGottenJson = false
+local hasGottenList = false
+local programListJson
+
+function fetch.Download(path)
+    local page = http.get(rootURL .. path)
+    local text = page.readAll();
+    local file = fs.open(path, "w")
+    if string.byte(text) == 63 then text = string.sub(text, 2) end
+    file.write(text)
+    file.close()
+    page.close()
+end
 
 function fetch.GetJson()
     if hasGottenJson then
         return
     end
-    
-    page = http.get(rootURL .. jsonPath)
-    text = page.readAll();
-    file = fs.open(jsonPath, "w")
-    if string.byte(text) == 63 then text = string.sub(text, 2) end
-    file.write(text)
-    file.close()
-    page.close()
+    fetch.Download(jsonPath)
     json = require("extlib.json")
-
     hasGottenJson = true
+end
+
+function fetch.UpdateList(force)
+    force = force or false
+    if hasGottenList and not force then
+        return
+    end
+    fetch.GetJson()
+
+    fetch.Download(programList)
+    programListJson = json.decode(programListData)
+    hasGottenList = true
 end
 
 function fetch.DownloadAllInList(url)
@@ -37,17 +55,20 @@ function fetch.DownloadAllInList(url)
     end
 end
 
-function fetch.Fetch(program)
-    fetch.GetJson()
+function fetch.Fetch(programName)
+    fetch.UpdateList()
+
+    local program = programListJson[programName]
+    for i, v in pairs(program["dependencies"]) do
+        fetch.Fetch(i)
+    end
+
+    for i, v in pairs(program[files]) do
+        fetch.Download(i)
+    end
     
-    local page = http.get(rootURL .. programList)
-    local programListData = page.readAll()
-    local file = fs.open(programList, "w")
-    if string.byte(programListData) == 63 then programListData = string.sub(programListData, 2) end
-    file.write(programListData)
-    
-    local programListJson = json.decode(programListData)
 end
 
+fetch.Fetch(appName)
 
 return fetch
