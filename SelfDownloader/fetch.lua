@@ -1,5 +1,7 @@
 ﻿local appName = ...
 
+package.path = package.path .. ";../?;../?.lua;../?/init.lua"
+
 local rootURL = "https://raw.githubusercontent.com/Alexanna/ComputerCraftPrograms/main/"
 local programList = "programs.json"
 local jsonPath = "extlib/json.lua"
@@ -17,6 +19,7 @@ function fetch.Download(path)
     file.write(text)
     file.close()
     page.close()
+    return text
 end
 
 function fetch.GetJson()
@@ -35,7 +38,7 @@ function fetch.UpdateList(force)
     end
     fetch.GetJson()
 
-    fetch.Download(programList)
+    local programListData = fetch.Download(programList)
     programListJson = json.decode(programListData)
     hasGottenList = true
 end
@@ -59,11 +62,16 @@ function fetch.Fetch(programName)
     fetch.UpdateList()
 
     local program = programListJson[programName]
-    for i, v in pairs(program["dependencies"]) do
-        fetch.Fetch(i)
+    print("Fetching:" .. programName)
+
+    if type(program["dependencies"]) == "table" then
+        for i, v in pairs(program["dependencies"]) do
+            fetch.Fetch(i)
+        end
     end
 
-    for i, v in pairs(program[files]) do
+    
+    for i, v in pairs(program["files"]) do
         fetch.Download(i)
     end
     

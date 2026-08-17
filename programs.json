@@ -52,6 +52,15 @@
     "authors": "_RoseDagger",
     "repo": "tree/master/lib"
   },
+  "json.lua": {
+    "files": {
+      "extlib/json.lua": "/extlib"
+    },
+    "name": "Json Lib",
+    "description": "",
+    "authors": "_RoseDagger",
+    "repo": "tree/master/lib"
+  },
   "debug": {
     "files": {
       "lib/debug.lua": "/lib"
